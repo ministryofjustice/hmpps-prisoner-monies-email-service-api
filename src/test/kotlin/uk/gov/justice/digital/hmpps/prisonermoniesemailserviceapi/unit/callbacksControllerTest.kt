@@ -16,7 +16,7 @@ class CallbackControllerTests : IntegrationTestBase() {
       val objectMapper = jacksonObjectMapper()
         // representative payload as at 2021-09-07
 
-      val validDeliveryReceiptPayload: JsonNode = objectMapper.readTree(
+      val validDeliveryReceiptPayload = objectMapper.readTree(
         """
           {
             "id": "11111111-1111-1111-1111-111111111111",
