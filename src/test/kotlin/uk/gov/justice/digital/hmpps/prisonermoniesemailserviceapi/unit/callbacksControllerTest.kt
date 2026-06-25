@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.integration.In
 class CallbackControllerTests : IntegrationTestBase() {
 
 @Test
-    fun `Callback endpoint returns 204 No Content`() {
+    fun `Callback endpoint returns 204 No Content for valid delivery receipts`() {
 
 
       val objectMapper = jacksonObjectMapper()
@@ -32,13 +32,6 @@ class CallbackControllerTests : IntegrationTestBase() {
         """.trimIndent()
       )
 
-//      valid_received_text_message_payload = {
-//        // unconfirmed payload, based on GOV.UK Notify documentation
-//        'id': '11111111-1111-1111-1111-111111111112',
-//        'date_received': '2021-09-03T12:15:30.000000Z',
-//        'source_number': '07000000000', 'destination_number': '07000000001',
-//        'message': 'How do I sign in?',
-//    }
 
     webTestClient.post()
       .uri("/notify-callbacks")
@@ -50,14 +43,33 @@ class CallbackControllerTests : IntegrationTestBase() {
       .expectBody().isEmpty
 
     }
+
+  @Test
+  fun `Callback endpoint returns 204 No Content for valid text messages`() {
+
+    val objectMapper = jacksonObjectMapper()
+    // unconfirmed payload, based on GOV.UK Notify documentation
+
+    val validReceivedTextMessagePayload = objectMapper.readTree(
+      """
+          {
+      "id": "11111111-1111-1111-1111-111111111112",
+      "date_received": "2021-09-03T12:15:30.000000Z",
+      "source_number": "07000000000",
+      "destination_number": "07000000001",
+      "message": "How do I sign in?"
+          }
+        """.trimIndent()
+        )
+
+    webTestClient.post()
+      .uri("/notify-callbacks")
+      .headers ( setAuthorisation() )
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(validReceivedTextMessagePayload)
+      .exchange()
+      .expectStatus().isNoContent
+      .expectBody().isEmpty
+
+  }
 }
-
-
-
-
-
-
-
-
-
-
