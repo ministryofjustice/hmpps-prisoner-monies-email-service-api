@@ -42,8 +42,8 @@ class CallbackControllerTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/notify-callbacks")
+      .headers ( setAuthorisation() )
       .contentType(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_PRISONER_MONIES_EMAIL_SERVICE_API__READ" )))
       .bodyValue(validDeliveryReceiptPayload)
       .exchange()
       .expectStatus().isNoContent
