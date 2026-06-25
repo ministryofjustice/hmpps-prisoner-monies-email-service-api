@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.unit
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -42,8 +41,9 @@ class CallbackControllerTests : IntegrationTestBase() {
 //    }
 
     webTestClient.post()
-      .uri("/callback")
+      .uri("/notify-callbacks")
       .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_PRISONER_MONIES_EMAIL_SERVICE_API__READ" )))
       .bodyValue(validDeliveryReceiptPayload)
       .exchange()
       .expectStatus().isNoContent
