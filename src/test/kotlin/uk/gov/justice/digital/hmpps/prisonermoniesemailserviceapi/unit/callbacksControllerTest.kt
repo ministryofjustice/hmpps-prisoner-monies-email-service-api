@@ -35,7 +35,7 @@ class CallbackControllerTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/notify-callbacks")
-      .headers ( setAuthorisation() )
+      .headers ( setAuthorisation(roles = listOf("ROLE_NOTIFY")) )
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(validDeliveryReceiptPayload)
       .exchange()
@@ -64,7 +64,7 @@ class CallbackControllerTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/notify-callbacks")
-      .headers ( setAuthorisation() )
+      .headers ( setAuthorisation(roles = listOf("ROLE_NOTIFY")) )
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(validReceivedTextMessagePayload)
       .exchange()
