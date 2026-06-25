@@ -8,7 +8,7 @@ class CallbackController {
   @PostMapping("/notify-callbacks")
   fun handleEmailCallback() {
     val harriet = "cool"
-    print(harriet)
+    print("Breakpoints are $harriet")
     return
   }
 }
