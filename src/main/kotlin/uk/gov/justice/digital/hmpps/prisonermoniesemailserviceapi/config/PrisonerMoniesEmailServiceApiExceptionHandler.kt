@@ -5,9 +5,13 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED
 import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.web.HttpMediaTypeNotSupportedException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
@@ -25,6 +29,19 @@ class PrisonerMoniesEmailServiceApiExceptionHandler {
         developerMessage = e.message,
       ),
     ).also { log.info("Validation exception: {}", e.message) }
+
+  @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
+  fun handleInvalidContentType(): ResponseEntity<String> = ResponseEntity
+    .status(BAD_REQUEST)
+    .contentType(MediaType.TEXT_PLAIN)
+    .body("Invalid request: Invalid content type")
+
+  @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+  fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<String> = ResponseEntity
+    .status(METHOD_NOT_ALLOWED)
+    .contentType(MediaType.TEXT_PLAIN)
+    .header("Allow", e.supportedHttpMethods?.joinToString(",") ?: "POST")
+    .body("")
 
   @ExceptionHandler(NoResourceFoundException::class)
   fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
