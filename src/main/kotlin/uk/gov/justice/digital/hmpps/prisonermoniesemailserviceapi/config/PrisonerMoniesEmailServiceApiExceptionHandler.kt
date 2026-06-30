@@ -21,8 +21,18 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestControllerAdvice
 class PrisonerMoniesEmailServiceApiExceptionHandler {
+  @ExceptionHandler(ValidationException::class)
+  fun handleValidationException(e: ValidationException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(BAD_REQUEST)
+    .body(
+      ErrorResponse(
+        status = BAD_REQUEST,
+        userMessage = "Validation failure: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.info("Validation exception: {}", e.message) }
+
   @ExceptionHandler(
-    ValidationException::class,
     HttpMessageNotReadableException::class,
     MismatchedInputException::class,
     InvalidFormatException::class,
@@ -32,10 +42,10 @@ class PrisonerMoniesEmailServiceApiExceptionHandler {
     .body(
       ErrorResponse(
         status = BAD_REQUEST,
-        userMessage = "Invalid request: ${e.message}",
+        userMessage = e.message,
         developerMessage = e.message,
       ),
-    ).also { log.info("Bad request: {}", e.message) }
+    ).also { log.info(e.message) }
 
   @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
   fun handleUnsupportedMediaType(e: HttpMediaTypeNotSupportedException): ResponseEntity<ErrorResponse> = ResponseEntity
