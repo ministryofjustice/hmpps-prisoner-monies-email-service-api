@@ -7,16 +7,14 @@ import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED
 import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
-import tools.jackson.databind.exc.InvalidFormatException
-import tools.jackson.databind.exc.MismatchedInputException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestControllerAdvice
@@ -32,42 +30,20 @@ class PrisonerMoniesEmailServiceApiExceptionHandler {
       ),
     ).also { log.info("Validation exception: {}", e.message) }
 
-  @ExceptionHandler(
-    HttpMessageNotReadableException::class,
-    MismatchedInputException::class,
-    InvalidFormatException::class,
-  )
-  fun handleBadRequest(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
-    .body(
-      ErrorResponse(
-        status = BAD_REQUEST,
-        userMessage = e.message,
-        developerMessage = e.message,
-      ),
-    ).also { log.info(e.message) }
-
   @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
-  fun handleUnsupportedMediaType(e: HttpMediaTypeNotSupportedException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
-    .body(
-      ErrorResponse(
-        status = BAD_REQUEST,
-        userMessage = "Invalid request: ${e.message}",
-        developerMessage = e.message,
-      ),
-    ).also { log.info("Invalid content type: {}", e.message) }
+  fun handleInvalidContentType(): ResponseEntity<String> =
+    ResponseEntity
+      .status(BAD_REQUEST)
+      .contentType(MediaType.TEXT_PLAIN)
+      .body("Invalid request: Invalid content type")
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-  fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(METHOD_NOT_ALLOWED)
-    .body(
-      ErrorResponse(
-        status = METHOD_NOT_ALLOWED,
-        userMessage = "Method not allowed: ${e.message}",
-        developerMessage = e.message,
-      ),
-    ).also { log.info("Method not allowed: {}", e.message) }
+  fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<String> =
+    ResponseEntity
+      .status(METHOD_NOT_ALLOWED)
+      .contentType(MediaType.TEXT_PLAIN)
+      .header("Allow", e.supportedHttpMethods?.joinToString(",") ?: "POST")
+      .body("")
 
   @ExceptionHandler(NoResourceFoundException::class)
   fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity

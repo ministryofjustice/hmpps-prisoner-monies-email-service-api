@@ -4,7 +4,8 @@ import tools.jackson.core.JsonParser
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.deser.std.StdDeserializer
-import tools.jackson.databind.exc.MismatchedInputException
+import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.exception.InvalidJsonPayloadException
+import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.exception.UnknownCallbackTypeException
 
 class NotifyCallbackDeserializer : StdDeserializer<NotifyCallbackRequest>(NotifyCallbackRequest::class.java) {
 
@@ -12,11 +13,7 @@ class NotifyCallbackDeserializer : StdDeserializer<NotifyCallbackRequest>(Notify
     val node = ctxt.readTree(parser) as JsonNode
 
     if (!node.isObject) {
-      throw MismatchedInputException.from(
-        parser,
-        NotifyCallbackRequest::class.java,
-        "JSON payload must be an object",
-      )
+      throw InvalidJsonPayloadException()
     }
 
     return when {
@@ -26,12 +23,7 @@ class NotifyCallbackDeserializer : StdDeserializer<NotifyCallbackRequest>(Notify
       hasAll(node, DELIVERY_RECEIPT_FIELDS) ->
         ctxt.readTreeAsValue(node, NotifyEmailCallbackRequest::class.java)
 
-      else ->
-        throw MismatchedInputException.from(
-          parser,
-          NotifyCallbackRequest::class.java,
-          "JSON payload is not a known callback type",
-        )
+      else -> throw UnknownCallbackTypeException()
     }
   }
 
