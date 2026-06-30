@@ -10,8 +10,7 @@ import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.dto.N
 class JacksonConfig {
 
   @Bean
-  fun notifyCallbackModule(): SimpleModule =
-    SimpleModule().apply {
-      addDeserializer(NotifyCallbackRequest::class.java, NotifyCallbackDeserializer())
-    }
+  fun notifyCallbackModule(): SimpleModule = SimpleModule().apply {
+    addDeserializer(NotifyCallbackRequest::class.java, NotifyCallbackDeserializer())
+  }
 }

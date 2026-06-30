@@ -27,8 +27,7 @@ class NotifyCallbackDeserializer : StdDeserializer<NotifyCallbackRequest>(Notify
     }
   }
 
-  private fun hasAll(node: JsonNode, fields: Set<String>): Boolean =
-    fields.all(node::has)
+  private fun hasAll(node: JsonNode, fields: Set<String>): Boolean = fields.all(node::has)
 
   private companion object {
     val DELIVERY_RECEIPT_FIELDS = setOf(

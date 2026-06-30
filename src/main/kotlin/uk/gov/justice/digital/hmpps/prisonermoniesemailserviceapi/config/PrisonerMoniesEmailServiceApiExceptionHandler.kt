@@ -31,19 +31,17 @@ class PrisonerMoniesEmailServiceApiExceptionHandler {
     ).also { log.info("Validation exception: {}", e.message) }
 
   @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
-  fun handleInvalidContentType(): ResponseEntity<String> =
-    ResponseEntity
-      .status(BAD_REQUEST)
-      .contentType(MediaType.TEXT_PLAIN)
-      .body("Invalid request: Invalid content type")
+  fun handleInvalidContentType(): ResponseEntity<String> = ResponseEntity
+    .status(BAD_REQUEST)
+    .contentType(MediaType.TEXT_PLAIN)
+    .body("Invalid request: Invalid content type")
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-  fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<String> =
-    ResponseEntity
-      .status(METHOD_NOT_ALLOWED)
-      .contentType(MediaType.TEXT_PLAIN)
-      .header("Allow", e.supportedHttpMethods?.joinToString(",") ?: "POST")
-      .body("")
+  fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<String> = ResponseEntity
+    .status(METHOD_NOT_ALLOWED)
+    .contentType(MediaType.TEXT_PLAIN)
+    .header("Allow", e.supportedHttpMethods?.joinToString(",") ?: "POST")
+    .body("")
 
   @ExceptionHandler(NoResourceFoundException::class)
   fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity

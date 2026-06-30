@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.dto.NotifyCallbackRequest
 
 @RestController
-class CallbackController (private val transmitter: NotifyAppInsightsLogger) {
+class CallbackController(private val transmitter: NotifyAppInsightsLogger) {
 
   @PostMapping("/notify-callbacks")
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -16,5 +16,4 @@ class CallbackController (private val transmitter: NotifyAppInsightsLogger) {
   fun handleCallback(@RequestBody callback: NotifyCallbackRequest) {
     transmitter.emit(callback)
   }
-
 }

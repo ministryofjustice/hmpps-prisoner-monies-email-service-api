@@ -3,22 +3,20 @@ package uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.integration.c
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertInstanceOf
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
-import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.integration.IntegrationTestBase
-
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.NotifyAppInsightsLogger
 import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.dto.NotifyCallbackRequest
 import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.dto.NotifyEmailCallbackRequest
 import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.callback.dto.NotifyTextCallbackRequest
+import uk.gov.justice.digital.hmpps.prisonermoniesemailserviceapi.integration.IntegrationTestBase
 
-
-class CallbackControllerTests : IntegrationTestBase() {
+class CallbackControllerTest : IntegrationTestBase() {
 
   @MockitoBean
   private lateinit var notifyAppInsightsLogger: NotifyAppInsightsLogger
@@ -160,8 +158,6 @@ class CallbackControllerTests : IntegrationTestBase() {
     verifyNoInteractions(notifyAppInsightsLogger)
   }
 
-
-
   @LocalServerPort
   private var port: Int = 0
 
@@ -173,7 +169,7 @@ class CallbackControllerTests : IntegrationTestBase() {
 
     webClient.post()
       .uri("/notify-callbacks")
-      .headers ( setAuthorisation(roles = listOf("ROLE_NOTIFY")) )
+      .headers(setAuthorisation(roles = listOf("ROLE_NOTIFY")))
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(validReceivedTextMessagePayload)
       .exchange()
@@ -181,8 +177,8 @@ class CallbackControllerTests : IntegrationTestBase() {
   }
 
   val validReceivedTextMessagePayload =
-      // representative payload as at 2021-09-07
-      """
+    // representative payload as at 2021-09-07
+    """
           {
       "id": "11111111-1111-1111-1111-111111111112",
       "date_received": "2021-09-03T12:15:30.000000Z",
@@ -190,10 +186,10 @@ class CallbackControllerTests : IntegrationTestBase() {
       "destination_number": "07000000001",
       "message": "How do I sign in?"
           }
-        """.trimIndent()
+    """.trimIndent()
 
-    val validDeliveryReceiptPayload =
-        """
+  val validDeliveryReceiptPayload =
+    """
           {
             "id": "11111111-1111-1111-1111-111111111111",
             "created_at": "2021-09-03T12:15:30.000000Z",
@@ -206,6 +202,5 @@ class CallbackControllerTests : IntegrationTestBase() {
             "to": "user@outside.local",
             "status": "delivered"
           }
-        """.trimIndent()
-
+    """.trimIndent()
 }
