@@ -10,7 +10,7 @@ data class NotifyEmailCallbackRequest(
   override val id: UUID,
   val createdAt: OffsetDateTime,
   val sentAt: OffsetDateTime,
-  val completedAt: OffsetDateTime?,
+  val completedAt: OffsetDateTime,
   val notificationType: String,
   val templateId: UUID,
   val templateVersion: Int,
