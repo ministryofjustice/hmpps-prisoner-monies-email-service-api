@@ -18,11 +18,11 @@ class CallbackController(private val transmitter: NotifyAppInsightsLogger) {
   fun handleCallback(@RequestBody callback: NotifyCallbackRequest) {
     transmitter.emit(callback)
   }
-}
 
-@GetMapping("/alexTest")
-fun alexTest() {
-  val alex = "cool"
-  val i_hope = "this is caught in review"
-  ResponseEntity.ok("ok")
+  @GetMapping("/alexTest")
+  fun alexTest() {
+    val alex = "cool"
+    val i_hope = "this is caught in review"
+    ResponseEntity.ok("ok")
+  }
 }
