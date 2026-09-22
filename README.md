@@ -101,7 +101,7 @@ lost within non-production issues.
 ### Production kubernetes alerts
 
 This is the severity label for production, determined by the `custom severity label`. See the above
-'Non production kubernetes alerts section' for more information. This is configured in `helm_deploy/values-prod.yaml`.
+[Non production kubernetes alerts](#non-production-kubernetes-alerts) section for more information. This is configured in `helm_deploy/values-prod.yaml`.
 
 ### Product ID
 
