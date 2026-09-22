@@ -6,6 +6,19 @@
 
 Template github repo used for new Kotlin based projects.
 
+## What this project is about
+
+This service handles email-related functionality for the Prisoner Monies service. Its responsibilities are:
+
+- providing links to download files referenced in emails, since GOV.UK Notify doesn't support attachments or
+  arbitrary file types
+- handling GOV.UK Notify callbacks, to keep track of sent emails' statuses, bounced email addresses, etc.
+
+Currently, the GOV.UK Notify callback handling has been implemented — see the
+[callback package README](src/main/kotlin/uk/gov/justice/digital/hmpps/prisonermoniesemailserviceapi/callback/README.md)
+for details on how callbacks are received, validated and processed. The email download links functionality is
+not yet implemented in this project.
+
 # Instructions
 
 If this is a HMPPS project then the project will be created as part of bootstrapping -
@@ -88,7 +101,7 @@ lost within non-production issues.
 ### Production kubernetes alerts
 
 This is the severity label for production, determined by the `custom severity label`. See the above
-[Non production kubernetes alerts section](non-production-kubernetes-alerts) for more information. This is configured in `helm_deploy/values-prod.yaml`.
+[Non production kubernetes alerts](#non-production-kubernetes-alerts) section for more information. This is configured in `helm_deploy/values-prod.yaml`.
 
 ### Product ID
 
